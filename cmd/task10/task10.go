@@ -96,18 +96,15 @@ func traverse(m Map, start Point) int {
 	score := 0
 	stack := []Point{start}
 	visited := make(map[Point]struct{})
-	isVisited := func(p Point) bool {
-		_, ok := visited[p]
-		return ok
-	}
 
 	for len(stack) > 0 {
 		p := stack[0]
 		stack = stack[1:]
 
-		if isVisited(p) {
+		if _, ok := visited[p]; ok {
 			continue
 		}
+		visited[p] = struct{}{}
 
 		if m[p.Y()][p.X()] == 9 {
 			score++
@@ -125,8 +122,6 @@ func traverse(m Map, start Point) int {
 		if p.CanMove(DirectionDown, m) {
 			stack = append(stack, p.Move(DirectionDown))
 		}
-
-		visited[p] = struct{}{}
 	}
 
 	return score
