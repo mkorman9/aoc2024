@@ -31,28 +31,27 @@ func (p Point) Y() int {
 	return int(p & 0xffff)
 }
 
-func (p Point) Move(d Direction) Point {
+func (p Point) Move(d Direction, m Map) (Point, bool) {
+	var p2 Point
 	switch d {
 	case DirectionLeft:
-		return NewPoint(p.X()-1, p.Y())
+		p2 = NewPoint(p.X()-1, p.Y())
 	case DirectionRight:
-		return NewPoint(p.X()+1, p.Y())
+		p2 = NewPoint(p.X()+1, p.Y())
 	case DirectionUp:
-		return NewPoint(p.X(), p.Y()-1)
+		p2 = NewPoint(p.X(), p.Y()-1)
 	case DirectionDown:
-		return NewPoint(p.X(), p.Y()+1)
+		p2 = NewPoint(p.X(), p.Y()+1)
 	}
 
-	return -1
-}
-
-func (p Point) CanMove(d Direction, m Map) bool {
-	p2 := p.Move(d)
 	if p2.Y() < 0 || p2.Y() >= len(m) || p2.X() < 0 || p2.X() >= len(m[p2.Y()]) {
-		return false
+		return p2, false
+	}
+	if m[p2.Y()][p2.X()]-m[p.Y()][p.X()] != 1 {
+		return p2, false
 	}
 
-	return m[p2.Y()][p2.X()]-m[p.Y()][p.X()] == 1
+	return p2, true
 }
 
 func main() {
@@ -110,17 +109,17 @@ func traverse(m Map, start Point) int {
 			score++
 		}
 
-		if p.CanMove(DirectionLeft, m) {
-			stack = append(stack, p.Move(DirectionLeft))
+		if p2, ok := p.Move(DirectionLeft, m); ok {
+			stack = append(stack, p2)
 		}
-		if p.CanMove(DirectionRight, m) {
-			stack = append(stack, p.Move(DirectionRight))
+		if p2, ok := p.Move(DirectionRight, m); ok {
+			stack = append(stack, p2)
 		}
-		if p.CanMove(DirectionUp, m) {
-			stack = append(stack, p.Move(DirectionUp))
+		if p2, ok := p.Move(DirectionUp, m); ok {
+			stack = append(stack, p2)
 		}
-		if p.CanMove(DirectionDown, m) {
-			stack = append(stack, p.Move(DirectionDown))
+		if p2, ok := p.Move(DirectionDown, m); ok {
+			stack = append(stack, p2)
 		}
 	}
 
@@ -139,17 +138,17 @@ func traverseTo(m Map, start, end Point) int {
 			rating++
 		}
 
-		if p.CanMove(DirectionLeft, m) {
-			stack = append(stack, p.Move(DirectionLeft))
+		if p2, ok := p.Move(DirectionLeft, m); ok {
+			stack = append(stack, p2)
 		}
-		if p.CanMove(DirectionRight, m) {
-			stack = append(stack, p.Move(DirectionRight))
+		if p2, ok := p.Move(DirectionRight, m); ok {
+			stack = append(stack, p2)
 		}
-		if p.CanMove(DirectionUp, m) {
-			stack = append(stack, p.Move(DirectionUp))
+		if p2, ok := p.Move(DirectionUp, m); ok {
+			stack = append(stack, p2)
 		}
-		if p.CanMove(DirectionDown, m) {
-			stack = append(stack, p.Move(DirectionDown))
+		if p2, ok := p.Move(DirectionDown, m); ok {
+			stack = append(stack, p2)
 		}
 	}
 
