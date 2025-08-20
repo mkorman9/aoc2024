@@ -20,15 +20,15 @@ const (
 type Point int64
 
 func NewPoint(x, y int) Point {
-	return Point((x << 16) | (y & 0xffff))
+	return Point((x << 32) | (y & 0xffffffff))
 }
 
 func (p Point) X() int {
-	return int((p >> 16) & 0xffff)
+	return int((p >> 32) & 0xffffffff)
 }
 
 func (p Point) Y() int {
-	return int(p & 0xffff)
+	return int(p & 0xffffffff)
 }
 
 func (p Point) Move(d Direction, m Map) (Point, bool) {
