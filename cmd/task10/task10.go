@@ -17,18 +17,18 @@ const (
 	DirectionDown
 )
 
-type Point int32
+type Point int64
 
-func NewPoint(x, y int16) Point {
-	return Point((int32(x) << 16) | (int32(y) & 0xffff))
+func NewPoint(x, y int) Point {
+	return Point((x << 16) | (y & 0xffff))
 }
 
-func (p Point) X() int16 {
-	return int16((p >> 16) & 0xffff)
+func (p Point) X() int {
+	return int((p >> 16) & 0xffff)
 }
 
-func (p Point) Y() int16 {
-	return int16(p & 0xffff)
+func (p Point) Y() int {
+	return int(p & 0xffff)
 }
 
 func (p Point) Move(d Direction) Point {
@@ -48,7 +48,7 @@ func (p Point) Move(d Direction) Point {
 
 func (p Point) CanMove(d Direction, m Map) bool {
 	p2 := p.Move(d)
-	if p2.Y() < 0 || p2.Y() >= int16(len(m)) || p2.X() < 0 || p2.X() >= int16(len(m[p2.Y()])) {
+	if p2.Y() < 0 || p2.Y() >= len(m) || p2.X() < 0 || p2.X() >= len(m[p2.Y()]) {
 		return false
 	}
 
@@ -161,7 +161,7 @@ func findTrailHeads(m Map) []Point {
 	for i := range m {
 		for j := range m[i] {
 			if m[i][j] == 0 {
-				heads = append(heads, NewPoint(int16(j), int16(i)))
+				heads = append(heads, NewPoint(j, i))
 			}
 		}
 	}
@@ -173,7 +173,7 @@ func findTrailEnds(m Map) []Point {
 	for i := range m {
 		for j := range m[i] {
 			if m[i][j] == 9 {
-				ends = append(ends, NewPoint(int16(j), int16(i)))
+				ends = append(ends, NewPoint(j, i))
 			}
 		}
 	}
